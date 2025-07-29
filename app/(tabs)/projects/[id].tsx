@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, BookOpen, Calendar, Play } from 'lucide-react-native';
+import { ArrowLeft, BookOpen, Calendar, NotebookIcon, Play } from 'lucide-react-native';
 import { Project, Notebook } from '@/types/api';
 import { apiService } from '@/services/apiService';
 import { mockProjects } from '@/services/mockData';
+import { AppColors } from '@/types/constants';
 
 export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -62,7 +63,7 @@ export default function ProjectDetailScreen() {
     >
       <View style={styles.notebookHeader}>
         <View style={styles.notebookIcon}>
-          <BookOpen size={20} color="#059669" />
+          <NotebookIcon size={20} color={AppColors.notebook} />
         </View>
         <View style={styles.notebookInfo}>
           <Text style={styles.notebookName}>{item.name}</Text>
@@ -76,12 +77,14 @@ export default function ProjectDetailScreen() {
       </View>
       
       <View style={styles.notebookFooter}>
-        <View style={styles.notebookMeta}>
-          <Calendar size={14} color="#6B7280" />
-          <Text style={styles.metaText}>
-            Updated {formatDate(item.updatedAt)}
-          </Text>
-        </View>
+        { item.modifiedDate && (
+          <View style={styles.notebookMeta}>
+            <Calendar size={14} color="#6B7280" />
+              <Text style={styles.metaText}>
+                Updated {formatDate(item.modifiedDate)}
+              </Text>
+          </View>
+        )}
         {item.canRunInteractive && (
           <View style={styles.interactiveBadge}>
             <Text style={styles.interactiveBadgeText}>Interactive</Text>

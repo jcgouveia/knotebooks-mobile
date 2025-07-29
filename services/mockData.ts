@@ -12,7 +12,7 @@ export const mockProjects: Project[] = [
     id: 'proj-1',
     name: 'Data Analysis Pipeline',
     description: 'Collection of notebooks for data processing and analysis',
-    createdAt: '2024-01-15T10:00:00Z',
+    creationDate: '2024-01-15T10:00:00Z',
     updatedAt: '2024-01-20T15:30:00Z',
     notebookCount: 5
   },
@@ -20,7 +20,7 @@ export const mockProjects: Project[] = [
     id: 'proj-2',
     name: 'Machine Learning Models',
     description: 'Training and evaluation notebooks for ML models',
-    createdAt: '2024-01-10T09:00:00Z',
+    creationDate: '2024-01-10T09:00:00Z',
     updatedAt: '2024-01-22T11:45:00Z',
     notebookCount: 8
   },
@@ -28,7 +28,7 @@ export const mockProjects: Project[] = [
     id: 'proj-3',
     name: 'Reporting Dashboard',
     description: 'Automated report generation and visualization',
-    createdAt: '2024-01-05T14:00:00Z',
+    creationDate: '2024-01-05T14:00:00Z',
     updatedAt: '2024-01-25T16:20:00Z',
     notebookCount: 3
   }
@@ -41,8 +41,8 @@ export const mockNotebooks: Notebook[] = [
     description: 'Clean and preprocess raw data files',
     projectId: 'proj-1',
     projectName: 'Data Analysis Pipeline',
-    createdAt: '2024-01-15T10:30:00Z',
-    updatedAt: '2024-01-20T15:30:00Z',
+    creationDate: '2024-01-15T10:30:00Z',
+    modifiedDate: '2024-01-20T15:30:00Z',
     canRunInteractive: true,
     parameters: [
       {
@@ -66,8 +66,8 @@ export const mockNotebooks: Notebook[] = [
     description: 'Generate statistical summaries and insights',
     projectId: 'proj-1',
     projectName: 'Data Analysis Pipeline',
-    createdAt: '2024-01-16T11:00:00Z',
-    updatedAt: '2024-01-21T09:15:00Z',
+    creationDate: '2024-01-16T11:00:00Z',
+    modifiedDate: '2024-01-21T09:15:00Z',
     canRunInteractive: false,
     parameters: [
       {
@@ -92,8 +92,8 @@ export const mockNotebooks: Notebook[] = [
     description: 'Train machine learning models with hyperparameter tuning',
     projectId: 'proj-2',
     projectName: 'Machine Learning Models',
-    createdAt: '2024-01-12T13:00:00Z',
-    updatedAt: '2024-01-22T11:45:00Z',
+    creationDate: '2024-01-12T13:00:00Z',
+    modifiedDate: '2024-01-22T11:45:00Z',
     canRunInteractive: true,
     parameters: [
       {

@@ -12,7 +12,7 @@ function RootLayoutContent() {
   useEffect(() => {
     if (!isLoading) {
       if (isAuthenticated) {
-        router.replace('/(tabs)');
+        router.replace('/(tabs)/projects');
       } else {
         router.replace('/(auth)/login');
       }

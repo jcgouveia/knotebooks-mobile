@@ -12,9 +12,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { BookOpen, Calendar, Play, Search, Filter } from 'lucide-react-native';
+import { BookOpen, Calendar, Play, Search, Filter, NotebookIcon } from 'lucide-react-native';
 import { Notebook } from '@/types/api';
 import { apiService } from '@/services/apiService';
+import { AppColors } from '@/types/constants';
 
 export default function NotebooksScreen() {
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
@@ -79,7 +80,7 @@ export default function NotebooksScreen() {
     >
       <View style={styles.notebookHeader}>
         <View style={styles.notebookIcon}>
-          <BookOpen size={20} color="#059669" />
+          <NotebookIcon size={20} color={AppColors.notebook} />
         </View>
         <View style={styles.notebookInfo}>
           <Text style={styles.notebookName}>{item.name}</Text>
@@ -94,12 +95,14 @@ export default function NotebooksScreen() {
       </View>
       
       <View style={styles.notebookFooter}>
-        <View style={styles.notebookMeta}>
-          <Calendar size={14} color="#6B7280" />
-          <Text style={styles.metaText}>
-            Updated {formatDate(item.updatedAt)}
-          </Text>
-        </View>
+        { item.modifiedDate && (
+          <View style={styles.notebookMeta}>
+            <Calendar size={14} color="#6B7280" />
+              <Text style={styles.metaText}>
+                Updated {formatDate(item.modifiedDate)}
+              </Text>
+          </View>
+        )}
         {item.canRunInteractive && (
           <View style={styles.interactiveBadge}>
             <Text style={styles.interactiveBadgeText}>Interactive</Text>
@@ -238,7 +241,7 @@ const styles = StyleSheet.create({
   notebookIcon: {
     width: 40,
     height: 40,
-    backgroundColor: '#ECFDF5',
+    backgroundColor: AppColors.notebookBackground,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',

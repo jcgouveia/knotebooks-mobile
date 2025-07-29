@@ -1,8 +1,8 @@
 import { User, Project, Notebook, NotebookExecution, AuthResponse, ApiError } from '@/types/api';
 import { mockUser, mockProjects, mockNotebooks, mockExecutions, createMockExecution } from './mockData';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://api.knotebooks.com';
-const USE_MOCK = process.env.EXPO_PUBLIC_USE_MOCK === 'true' || true; // Default to mock for demo
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:8081/notebooks';
+const USE_MOCK = process.env.EXPO_PUBLIC_USE_MOCK === 'true' || false; // Default to mock for demo
 
 class ApiService {
   private token: string | null = null;
@@ -59,7 +59,7 @@ class ApiService {
       return mockProjects;
     }
 
-    const response = await fetch(`${API_BASE_URL}/projects`, {
+    const response = await fetch(`${API_BASE_URL}/project`, {
       headers: this.getAuthHeaders(),
     });
 
@@ -79,8 +79,8 @@ class ApiService {
     }
 
     const url = projectId 
-      ? `${API_BASE_URL}/projects/${projectId}/notebooks`
-      : `${API_BASE_URL}/notebooks`;
+      ? `${API_BASE_URL}/project/${projectId}/notebooks`
+      : `${API_BASE_URL}/notebook/list`;
 
     const response = await fetch(url, {
       headers: this.getAuthHeaders(),

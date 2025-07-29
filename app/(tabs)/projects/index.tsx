@@ -11,9 +11,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { FolderOpen, Calendar, BookOpen } from 'lucide-react-native';
+import { FolderOpen, Calendar, BookOpen, Inbox, NotebookIcon } from 'lucide-react-native';
 import { Project } from '@/types/api';
 import { apiService } from '@/services/apiService';
+import { AppColors } from '@/types/constants';
 
 export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -48,39 +49,45 @@ export default function ProjectsScreen() {
     });
   };
 
-  const renderProject = ({ item }: { item: Project }) => (
-    <TouchableOpacity
-      style={styles.projectCard}
-      onPress={() => router.push(`/(tabs)/projects/${item.id}`)}
-    >
-      <View style={styles.projectHeader}>
-        <View style={styles.projectIcon}>
-          <FolderOpen size={24} color="#2563EB" />
+  const renderProject = ({ item }: { item: Project }) => {
+    const notebookCount: number = item.notebooks?.length;
+
+    return (
+      <TouchableOpacity
+        style={styles.projectCard}
+        onPress={() => router.push(`/(tabs)/projects/${item.id}`)}
+      >
+        <View style={styles.projectHeader}>
+          <View style={styles.projectIcon}>
+            <Inbox size={24} color={AppColors.project} />
+          </View>
+          <View style={styles.projectInfo}>
+            <Text style={styles.projectName}>{item.name}</Text>
+            <Text style={styles.projectDescription} numberOfLines={2}>
+              {item.description}
+            </Text>
+          </View>
         </View>
-        <View style={styles.projectInfo}>
-          <Text style={styles.projectName}>{item.name}</Text>
-          <Text style={styles.projectDescription} numberOfLines={2}>
-            {item.description}
-          </Text>
-        </View>
-      </View>
-      
-      <View style={styles.projectFooter}>
-        <View style={styles.projectMeta}>
-          <BookOpen size={14} color="#6B7280" />
-          <Text style={styles.metaText}>
-            {item.notebookCount} notebook{item.notebookCount !== 1 ? 's' : ''}
-          </Text>
-        </View>
-        <View style={styles.projectMeta}>
-          <Calendar size={14} color="#6B7280" />
-          <Text style={styles.metaText}>
-            Updated {formatDate(item.updatedAt)}
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
+        
+        <View style={styles.projectFooter}>
+          <View style={styles.projectMeta}>
+            <NotebookIcon size={14} color="#6B7280" />
+            <Text style={styles.metaText}>
+              {notebookCount} notebook{notebookCount !== 1 ? 's' : ''}
+            </Text>
+          </View>
+          { item.modifiedDate && (
+            <View style={styles.projectMeta}>
+              <Calendar size={14} color="#6B7280" />
+              <Text style={styles.metaText}>
+                Updated {formatDate(item.modifiedDate)}
+              </Text>
+            </View>
+          )}
+          </View>
+      </TouchableOpacity>
+    )
+    };
 
   if (isLoading) {
     return (
@@ -99,7 +106,7 @@ export default function ProjectsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Projects</Text>
+        <Text style={styles.title}>My Projects</Text>
         <Text style={styles.subtitle}>Select a project to browse its notebooks</Text>
       </View>
 
@@ -175,7 +182,7 @@ const styles = StyleSheet.create({
   projectIcon: {
     width: 48,
     height: 48,
-    backgroundColor: '#EFF6FF',
+    backgroundColor: AppColors.projectBackground,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',

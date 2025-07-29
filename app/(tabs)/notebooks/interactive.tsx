@@ -144,20 +144,18 @@ export default function InteractiveNotebookScreen() {
         </View>
       </View>
 
-      {
-        /* JOG
-      isLoading && (
+      {isLoading && (
         <View style={styles.loadingOverlay}>
           <Text style={styles.loadingText}>Loading interactive notebook...</Text>
         </View>
-      )
-      */
-      }
+      )}
 
 
 
     {Platform.OS === 'web' ? (
-      <iframe src={url} style={{ flex: 1 }} />
+      <iframe src={url} style={{ flex: 1 }} 
+        onLoad={() => setIsLoading(false)}
+      />
     ) : (
       <WebView
         ref={webViewRef}

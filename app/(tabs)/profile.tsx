@@ -8,7 +8,7 @@ import {
   Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LogOut, Settings, Info, BookOpen } from 'lucide-react-native';
+import { LogOut, Settings, Info, NotebookIcon } from 'lucide-react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'expo-router';
 
@@ -87,7 +87,7 @@ export default function ProfileScreen() {
 
         {/* Demo Mode Banner */}
         <View style={styles.demoBanner}>
-          <BookOpen size={20} color="#2563EB" />
+          <NotebookIcon size={20} color="#2563EB" />
           <View style={styles.demoContent}>
             <Text style={styles.demoTitle}>Demo Mode Active</Text>
             <Text style={styles.demoDescription}>

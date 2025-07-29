@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, BookOpen } from 'lucide-react-native';
+import { Mail, Lock, BookOpen, NotebookIcon } from 'lucide-react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('demo@knotebooks.com');
@@ -47,7 +47,7 @@ export default function LoginScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <BookOpen size={48} color="#2563EB" />
+            <NotebookIcon size={48} color="#2563EB" />
           </View>
           <Text style={styles.title}>Knotebooks</Text>
           <Text style={styles.subtitle}>Execute notebooks on the go</Text>
