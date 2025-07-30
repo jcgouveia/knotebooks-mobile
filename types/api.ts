@@ -9,22 +9,23 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  notebooks:[],
+  notebooks?:[],
+  notebookCount?: number,
   creationDate: string;
   modifiedDate: string;
-//  notebookCount: number;
 }
 
 export interface Notebook {
   id: string;
   name: string;
   description: string;
-  projectId: string;
-  projectName: string;
   creationDate: string;
   modifiedDate: string;
+
+  projectId: string;
+  projectName: string;
   parameters: NotebookParameter[];
-  canRunInteractive: boolean;
+  canRunInteractive?: boolean;
 }
 
 export interface NotebookParameter {

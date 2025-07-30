@@ -37,7 +37,7 @@ export default function ProfileScreen() {
   const showAppInfo = () => {
     Alert.alert(
       'About Knotebooks',
-      'Version 1.0.0\n\nExecute and manage your notebooks on the go with our mobile companion app.\n\nCurrently running in demo mode with mock data.',
+      'Version 1.0.0\n\nExecute and manage your notebooks on the go with our mobile companion app.',
       [{ text: 'OK' }]
     );
   };
@@ -85,16 +85,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Demo Mode Banner */}
-        <View style={styles.demoBanner}>
-          <NotebookIcon size={20} color="#2563EB" />
-          <View style={styles.demoContent}>
-            <Text style={styles.demoTitle}>Demo Mode Active</Text>
-            <Text style={styles.demoDescription}>
-              This app is running with mock data. In production, it would connect to your Knotebooks server.
-            </Text>
-          </View>
-        </View>
       </View>
     </SafeAreaView>
   );

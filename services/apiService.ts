@@ -20,7 +20,7 @@ class ApiService {
       return response;
     }
 
-    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+    const response = await fetch(`${API_BASE_URL}/session/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,6 +70,19 @@ class ApiService {
     return response.json();
   }
 
+  async getProject(projectId: string): Promise<Project> {
+
+    const response = await fetch(`${API_BASE_URL}/project/${projectId}`, {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw await this.handleError(response);
+    }
+
+    return response.json();
+  }
+
   async getNotebooks(projectId?: string): Promise<Notebook[]> {
     if (USE_MOCK) {
       await this.delay(600);
@@ -83,6 +96,19 @@ class ApiService {
       : `${API_BASE_URL}/notebook/list`;
 
     const response = await fetch(url, {
+      headers: this.getAuthHeaders(),
+    });
+
+    if (!response.ok) {
+      throw await this.handleError(response);
+    }
+
+    return response.json();
+  }
+
+  async getNotebook(id: string): Promise<Notebook> {
+
+    const response = await fetch(`${API_BASE_URL}/notebook/${id}/info`, {
       headers: this.getAuthHeaders(),
     });
 

@@ -19,8 +19,13 @@ import { Notebook, NotebookExecution } from '@/types/api';
 import { apiService } from '@/services/apiService';
 import { mockNotebooks } from '@/services/mockData';
 
+type Params = {
+  notebookId: string,
+  projectId: string
+}
+
 export default function ExecuteNotebookScreen() {
-  const { notebookId } = useLocalSearchParams<{ notebookId: string }>();
+  const { notebookId, projectId } = useLocalSearchParams<Params>();
   const [notebook, setNotebook] = useState<Notebook | null>(null);
   const [parameters, setParameters] = useState<Record<string, any>>({});
   const [execution, setExecution] = useState<NotebookExecution | null>(null);
@@ -33,12 +38,13 @@ export default function ExecuteNotebookScreen() {
 
   const loadNotebook = async () => {
     try {
-      const notebookData = mockNotebooks.find(nb => nb.id === notebookId);
+      const notebookData = await apiService.getNotebook(notebookId);
+
       if (notebookData) {
         setNotebook(notebookData);
         // Initialize parameters with default values
         const initialParams: Record<string, any> = {};
-        notebookData.parameters.forEach(param => {
+        notebookData.parameters?.forEach(param => {
           if (param.defaultValue !== undefined) {
             initialParams[param.name] = param.defaultValue;
           }
@@ -60,8 +66,10 @@ export default function ExecuteNotebookScreen() {
   const executeNotebook = async () => {
     if (!notebook) return;
 
+    const params = notebook.parameters || [];
+
     // Validate required parameters
-    const missingParams = notebook.parameters
+    const missingParams = params
       .filter(param => param.required && !parameters[param.name])
       .map(param => param.name);
 
@@ -101,17 +109,16 @@ export default function ExecuteNotebookScreen() {
   const openInteractiveMode = () => {
     if (!notebook) return;
     
-    //let url = apiService.getInteractiveNotebookUrl(notebook.id, notebook.projectId);
-    const url = "http://localhost:3091/runner/index.html?id=resource-test&ownerId=8e6c02f3-da14-4864-a13d-e8bd2ff09cd6&anonymous=true&auth=am9hby5nb3V2ZWlhQG1vcnBoaXMtdGVjaC5jb20%3D&host=http%253A%252F%252F127.0.0.1%253A9040%252Fnotebooks&theme="
     router.push({
       pathname: '/(tabs)/notebooks/interactive',
       params: { 
         notebookId: notebook.id,
         notebookName: notebook.name,
-        url: url
+        projectId
       }
     });
   };
+
 
   const copyResult = async () => {
     if (execution?.result) {
@@ -234,7 +241,7 @@ export default function ExecuteNotebookScreen() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.description}>{notebook.description}</Text>
 
-        {notebook.parameters.length > 0 && (
+        {notebook.parameters?.length > 0 && (
           <View style={styles.parametersSection}>
             <Text style={styles.sectionTitle}>Parameters</Text>
             {notebook.parameters.map(renderParameterInput)}
@@ -257,15 +264,13 @@ export default function ExecuteNotebookScreen() {
             )}
           </TouchableOpacity>
 
-          {notebook.canRunInteractive && (
-            <TouchableOpacity
-              style={styles.interactiveButton}
-              onPress={openInteractiveMode}
-            >
-              <Monitor size={20} color="#2563EB" />
-              <Text style={styles.interactiveButtonText}>Interactive Mode</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={styles.interactiveButton}
+            onPress={openInteractiveMode}
+          >
+            <Monitor size={20} color="#2563EB" />
+            <Text style={styles.interactiveButtonText}>Interactive Mode</Text>
+          </TouchableOpacity>
         </View>
 
         {execution && (

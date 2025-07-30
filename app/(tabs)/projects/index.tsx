@@ -50,7 +50,7 @@ export default function ProjectsScreen() {
   };
 
   const renderProject = ({ item }: { item: Project }) => {
-    const notebookCount: number = item.notebooks?.length;
+    const notebookCount: number | undefined = item.notebookCount || item.notebooks?.length;
 
     return (
       <TouchableOpacity

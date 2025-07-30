@@ -103,11 +103,11 @@ export default function NotebooksScreen() {
               </Text>
           </View>
         )}
-        {item.canRunInteractive && (
-          <View style={styles.interactiveBadge}>
-            <Text style={styles.interactiveBadgeText}>Interactive</Text>
-          </View>
-        )}
+
+        <View style={styles.interactiveBadge}>
+          <Text style={styles.interactiveBadgeText}>Interactive</Text>
+        </View>
+
       </View>
     </TouchableOpacity>
   );

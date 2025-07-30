@@ -14,15 +14,20 @@ import { ArrowLeft, RefreshCw, Share as ShareIcon, Copy } from 'lucide-react-nat
 import * as Clipboard from 'expo-clipboard';
 import { Platform } from 'react-native';
 
+type Params = {
+  notebookId: string;
+  notebookName: string;
+  projectId: string;
+}
+
 export default function InteractiveNotebookScreen() {
-  const { notebookId, notebookName, url } = useLocalSearchParams<{
-    notebookId: string;
-    notebookName: string;
-    url: string;
-  }>();
+  const { notebookId, notebookName, projectId } = useLocalSearchParams<Params>();
   const [isLoading, setIsLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
   const router = useRouter();
+  const url = buildExecutionUrl(notebookId, projectId);
+
+  console.log("url", url);
 
   const handleRefresh = () => {
     webViewRef.current?.reload();
@@ -38,6 +43,27 @@ export default function InteractiveNotebookScreen() {
       console.error('Error sharing:', error);
     }
   };
+
+  function buildExecutionUrl(notebookId: string, projectId?: string) {
+    const RUNNER_BASE_URL = process.env.EXPO_PUBLIC_RUNNER_URL; 
+    let url = `${RUNNER_BASE_URL}?id=${encodeURIComponent(notebookId)}`;
+    if (projectId)
+      url = url + `&ownerId=${encodeURIComponent(projectId)}`;
+
+    const auth = "";
+    const host = process.env.EXPO_PUBLIC_API_URL;
+    const layout = "mobile";
+
+    if (auth)
+      url = url + `&auth=${auth}`;
+    if (host)
+      url = url + `&host=${encodeURIComponent(host)}`;
+
+    if (layout)
+      url = url + `&layout=${layout}`;
+
+      return url;
+  }
 
   const handleMessage = (event: any) => {
     try {
@@ -124,7 +150,6 @@ export default function InteractiveNotebookScreen() {
         
         <View style={styles.headerContent}>
           <Text style={styles.title} numberOfLines={1}>{notebookName}</Text>
-          <Text style={styles.subtitle}>Interactive Mode</Text>
         </View>
         
         <View style={styles.headerActions}>

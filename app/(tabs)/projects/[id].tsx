@@ -30,13 +30,15 @@ export default function ProjectDetailScreen() {
   const loadProjectData = async () => {
     try {
       // Get project info
-      const projectData = mockProjects.find(p => p.id === id);
+      const projectData = await apiService.getProject(id);
       if (projectData) {
         setProject(projectData);
       }
 
       // Get project notebooks
-      const notebooksData = await apiService.getNotebooks(id);
+      const notebooksData = projectData.notebooks ?
+          projectData.notebooks :
+          await apiService.getNotebooks(id);
       setNotebooks(notebooksData);
     } catch (error: any) {
       Alert.alert('Error', error.message || 'Failed to load project data');
@@ -58,7 +60,7 @@ export default function ProjectDetailScreen() {
       style={styles.notebookCard}
       onPress={() => router.push({
         pathname: '/(tabs)/notebooks/execute',
-        params: { notebookId: item.id }
+        params: { notebookId: item.id, projectId: project?.id }
       })}
     >
       <View style={styles.notebookHeader}>
@@ -85,11 +87,10 @@ export default function ProjectDetailScreen() {
               </Text>
           </View>
         )}
-        {item.canRunInteractive && (
-          <View style={styles.interactiveBadge}>
-            <Text style={styles.interactiveBadgeText}>Interactive</Text>
-          </View>
-        )}
+
+        <View style={styles.interactiveBadge}>
+          <Text style={styles.interactiveBadgeText}>Interactive</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
   notebookIcon: {
     width: 40,
     height: 40,
-    backgroundColor: '#ECFDF5',
+    backgroundColor: AppColors.notebookBackground,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',

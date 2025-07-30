@@ -13,7 +13,7 @@ export const mockProjects: Project[] = [
     name: 'Data Analysis Pipeline',
     description: 'Collection of notebooks for data processing and analysis',
     creationDate: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-20T15:30:00Z',
+    modifiedDate: '2024-01-20T15:30:00Z',
     notebookCount: 5
   },
   {
@@ -21,7 +21,7 @@ export const mockProjects: Project[] = [
     name: 'Machine Learning Models',
     description: 'Training and evaluation notebooks for ML models',
     creationDate: '2024-01-10T09:00:00Z',
-    updatedAt: '2024-01-22T11:45:00Z',
+    modifiedDate: '2024-01-22T11:45:00Z',
     notebookCount: 8
   },
   {
@@ -29,7 +29,7 @@ export const mockProjects: Project[] = [
     name: 'Reporting Dashboard',
     description: 'Automated report generation and visualization',
     creationDate: '2024-01-05T14:00:00Z',
-    updatedAt: '2024-01-25T16:20:00Z',
+    modifiedDate: '2024-01-25T16:20:00Z',
     notebookCount: 3
   }
 ];
