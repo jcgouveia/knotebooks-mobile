@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   Share
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -13,6 +12,9 @@ import { WebView } from 'react-native-webview';
 import { ArrowLeft, RefreshCw, Share as ShareIcon, Copy } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 import { Platform } from 'react-native';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
+import { Base64 } from '@/types/utils';
+import { apiService } from '@/services/apiService';
 
 type Params = {
   notebookId: string;
@@ -25,6 +27,7 @@ export default function InteractiveNotebookScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
   const router = useRouter();
+  const { alert, confirm } = usePlatformAlert();
   const url = buildExecutionUrl(notebookId, projectId);
 
   console.log("url", url);
@@ -50,7 +53,8 @@ export default function InteractiveNotebookScreen() {
     if (projectId)
       url = url + `&ownerId=${encodeURIComponent(projectId)}`;
 
-    const auth = "";
+    const user = apiService.getUser();
+    const auth = user ? Base64.encode(user.username) : undefined;
     const host = process.env.EXPO_PUBLIC_API_URL;
     const layout = "mobile";
 
@@ -72,11 +76,11 @@ export default function InteractiveNotebookScreen() {
       switch (data.type) {
         case 'copy':
           Clipboard.setStringAsync(data.content);
-          Alert.alert('Copied', 'Content copied to clipboard');
+          alert('Copied', 'Content copied to clipboard');
           break;
           
         case 'download':
-          Alert.alert('Download', `File ${data.filename} ready for download`);
+          alert('Download', `File ${data.filename} ready for download`);
           break;
           
         case 'share':

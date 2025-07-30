@@ -2,7 +2,7 @@ import { User, Project, Notebook, NotebookExecution, NotebookResult } from '@/ty
 
 export const mockUser: User = {
   id: 'user-1',
-  email: 'demo@knotebooks.com',
+  username: 'demo@knotebooks.com',
   name: 'Demo User',
   avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
 };

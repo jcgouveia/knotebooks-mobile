@@ -30,8 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const userData = await AsyncStorage.getItem('user_data');
       
       if (token && userData) {
+        const user = JSON.parse(userData);
         apiService.setToken(token);
-        setUser(JSON.parse(userData));
+        apiService.setUser(user);
+        setUser(user);
       }
     } catch (error) {
       console.error('Failed to load stored auth:', error);
@@ -47,8 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await AsyncStorage.setItem('auth_token', authResponse.token);
       await AsyncStorage.setItem('user_data', JSON.stringify(authResponse.user));
       
-      setUser(authResponse.user);
-    } catch (error) {
+      const user: User = {
+        id: username,
+        username,
+        name: username
+      }
+      apiService.setUser(user);
+      setUser(user);
+    } 
+    catch (error) {
       throw error;
     }
   };
@@ -60,7 +69,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Convert OAuth user to our User format and create a mock token
       const user: User = {
         id: oauthUser.id,
-        email: oauthUser.email,
+        username: oauthUser.email,
         name: oauthUser.name,
         avatar: oauthUser.avatar
       };
@@ -72,6 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await AsyncStorage.setItem('auth_provider', providerId);
       
       apiService.setToken(token);
+      apiService.setUser(user);
       setUser(user);
     } catch (error) {
       throw error;
@@ -80,17 +90,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       await apiService.logout();
-      await AsyncStorage.removeItem('auth_token');
-      await AsyncStorage.removeItem('user_data');
-      await AsyncStorage.removeItem('auth_provider');
-      setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear local state even if API call fails
-      await AsyncStorage.removeItem('auth_token');
-      await AsyncStorage.removeItem('user_data');
-      await AsyncStorage.removeItem('auth_provider');
-      setUser(null);
+    } finally {
+      // Always clear local state regardless of API call result
+      try {
+        await AsyncStorage.removeItem('auth_token');
+        await AsyncStorage.removeItem('user_data');
+        await AsyncStorage.removeItem('auth_provider');
+        apiService.setToken('');
+        setUser(null);
+      } catch (storageError) {
+        console.error('Error clearing storage:', storageError);
+        // Still clear user state even if storage fails
+        apiService.setToken('');
+        setUser(null);
+      }
     }
   };
 

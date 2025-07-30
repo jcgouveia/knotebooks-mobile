@@ -17,7 +17,8 @@ function RootLayoutContent() {
         router.replace('/(auth)/login');
       }
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isLoading, isAuthenticated, router]);
+
   if (isLoading) {
     return null; // You could add a splash screen here
   }

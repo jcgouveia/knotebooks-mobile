@@ -7,7 +7,6 @@ import {
   StyleSheet,
   RefreshControl,
   ActivityIndicator,
-  Alert
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,12 +14,14 @@ import { FolderOpen, Calendar, BookOpen, Inbox, NotebookIcon } from 'lucide-reac
 import { Project } from '@/types/api';
 import { apiService } from '@/services/apiService';
 import { AppColors } from '@/types/constants';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
 
 export default function ProjectsScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const router = useRouter();
+  const { alert, confirm } = usePlatformAlert();
 
   useEffect(() => {
     loadProjects();
@@ -34,7 +35,7 @@ export default function ProjectsScreen() {
       const data = await apiService.getProjects();
       setProjects(data);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to load projects');
+      alert('Error', error.message || 'Failed to load projects');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

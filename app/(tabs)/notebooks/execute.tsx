@@ -17,7 +17,7 @@ import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import { Notebook, NotebookExecution } from '@/types/api';
 import { apiService } from '@/services/apiService';
-import { mockNotebooks } from '@/services/mockData';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
 
 type Params = {
   notebookId: string,
@@ -31,6 +31,7 @@ export default function ExecuteNotebookScreen() {
   const [execution, setExecution] = useState<NotebookExecution | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const router = useRouter();
+  const { alert, confirm } = usePlatformAlert();
 
   useEffect(() => {
     loadNotebook();
@@ -52,7 +53,7 @@ export default function ExecuteNotebookScreen() {
         setParameters(initialParams);
       }
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to load notebook');
+      alert('Error', error.message || 'Failed to load notebook');
     }
   };
 
@@ -74,7 +75,7 @@ export default function ExecuteNotebookScreen() {
       .map(param => param.name);
 
     if (missingParams.length > 0) {
-      Alert.alert('Missing Parameters', `Please provide: ${missingParams.join(', ')}`);
+      alert('Missing Parameters', `Please provide: ${missingParams.join(', ')}`);
       return;
     }
 
@@ -84,7 +85,7 @@ export default function ExecuteNotebookScreen() {
       setExecution(executionData);
       pollExecution(executionData.id);
     } catch (error: any) {
-      Alert.alert('Execution Failed', error.message || 'Failed to execute notebook');
+      alert('Execution Failed', error.message || 'Failed to execute notebook');
       setIsExecuting(false);
     }
   };
@@ -124,7 +125,7 @@ export default function ExecuteNotebookScreen() {
     if (execution?.result) {
       const resultText = JSON.stringify(execution.result.data, null, 2);
       await Clipboard.setStringAsync(resultText);
-      Alert.alert('Copied', 'Result copied to clipboard');
+      alert('Copied', 'Result copied to clipboard');
     }
   };
 

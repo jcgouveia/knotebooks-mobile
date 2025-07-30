@@ -41,7 +41,7 @@ export default function NotebooksScreen() {
       const data = await apiService.getNotebooks();
       setNotebooks(data);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to load notebooks');
+      alert('Error', error.message || 'Failed to load notebooks');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);

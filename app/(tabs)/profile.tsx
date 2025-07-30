@@ -4,41 +4,51 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Alert,
-  Image
+  Image,
+  Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LogOut, Settings, Info, NotebookIcon } from 'lucide-react-native';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'expo-router';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const { alert, confirm } = usePlatformAlert();
 
   const handleLogout = () => {
-    Alert.alert(
-      'Sign Out',
-      'Are you sure you want to sign out?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Sign Out', 
-          style: 'destructive',
-          onPress: async () => {
-            await logout();
-            router.replace('/(auth)/login');
+    if (Platform.OS === 'web') {
+      const confirmLogout = window.confirm('Are you sure you want to sign out?');
+      if (confirmLogout) {
+        doLogout();
+      }
+    } else {
+      confirm(
+        'Sign Out',
+        'Are you sure you want to sign out?',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          { 
+            text: 'Sign Out', 
+            style: 'destructive',
+            onPress: doLogout
           }
-        }
-      ]
-    );
+        ]
+      );
+    }
   };
 
+  const doLogout = async () => {
+    await logout();
+    router.replace('/(auth)/login');
+  }
+
   const showAppInfo = () => {
-    Alert.alert(
+    confirm(
       'About Knotebooks',
-      'Version 1.0.0\n\nExecute and manage your notebooks on the go with our mobile companion app.',
-      [{ text: 'OK' }]
+      'Version 1.0.0\n\nExecute and manage your notebooks on the go with our mobile companion app.'
     );
   };
 
@@ -64,7 +74,7 @@ export default function ProfileScreen() {
           </View>
           <View style={styles.userInfo}>
             <Text style={styles.userName}>{user?.name || 'User'}</Text>
-            <Text style={styles.userEmail}>{user?.email || 'user@example.com'}</Text>
+            <Text style={styles.userEmail}>{user?.username || 'user@example.com'}</Text>
           </View>
         </View>
 

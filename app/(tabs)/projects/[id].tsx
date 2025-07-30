@@ -6,15 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, BookOpen, Calendar, NotebookIcon, Play } from 'lucide-react-native';
+import { ArrowLeft, Calendar, NotebookIcon, Play } from 'lucide-react-native';
 import { Project, Notebook } from '@/types/api';
 import { apiService } from '@/services/apiService';
-import { mockProjects } from '@/services/mockData';
 import { AppColors } from '@/types/constants';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
 
 export default function ProjectDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,6 +21,7 @@ export default function ProjectDetailScreen() {
   const [notebooks, setNotebooks] = useState<Notebook[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { alert, confirm } = usePlatformAlert();
 
   useEffect(() => {
     loadProjectData();
@@ -41,7 +41,7 @@ export default function ProjectDetailScreen() {
           await apiService.getNotebooks(id);
       setNotebooks(notebooksData);
     } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to load project data');
+      alert('Error', error.message || 'Failed to load project data');
     } finally {
       setIsLoading(false);
     }

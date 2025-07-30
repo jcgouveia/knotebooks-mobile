@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -20,6 +19,7 @@ import OAuthButton from '@/components/OAuthButton';
 import { OAuthProvider } from '@/types/auth';
 import logoImage from '@/assets/images/k.notebooks-dark.svg';
 import logoCompany from '@/assets/images/logo-dark.png';
+import { usePlatformAlert } from '@/hooks/usePlatformAlert';
 
 const oauthProviders: OAuthProvider[] = [
   { id: 'github', name: 'GitHub', icon: 'github', color: '#24292e' },
@@ -34,10 +34,11 @@ export default function LoginScreen() {
   const [oauthLoading, setOauthLoading] = useState<string | null>(null);
   const { login, loginWithOAuth } = useAuth();
   const router = useRouter();
+  const { alert } = usePlatformAlert();
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Error', 'Please enter both email and password');
+      alert('Error', 'Please enter both email and password');
       return;
     }
 
@@ -46,7 +47,7 @@ export default function LoginScreen() {
       await login(email.trim(), password);
       router.replace('/(tabs)');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message || 'Invalid credentials');
+      alert('Login Failed', error.message || 'Invalid credentials');
     } finally {
       setIsLoading(false);
     }
@@ -58,7 +59,7 @@ export default function LoginScreen() {
       await loginWithOAuth(providerId);
       router.replace('/(tabs)');
     } catch (error: any) {
-      Alert.alert('OAuth Login Failed', error.message || 'Authentication failed');
+      alert('OAuth Login Failed', error.message || 'Authentication failed');
     } finally {
       setOauthLoading(null);
     }
@@ -77,7 +78,7 @@ export default function LoginScreen() {
             />
           </View>
           <Text style={styles.subtitle}>Execute notebooks on the go</Text>
-          <View style={styles.logoContainer}>
+          <View style={[styles.logoContainer, { marginTop: 20 }]}>
             <Text style={styles.subtitle2}>by</Text>
             <Image
               source={logoCompany} 
@@ -125,8 +126,10 @@ export default function LoginScreen() {
         </TouchableOpacity>
 
         <View style={styles.divider}>
-          <View style={styles.dividerLine} />
-        </View>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>or</Text>
+            <View style={styles.dividerLine} />
+          </View>
 
         <View style={styles.form}>
           <View style={styles.oauthSection}>

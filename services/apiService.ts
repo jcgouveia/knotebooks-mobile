@@ -6,9 +6,11 @@ const USE_MOCK = process.env.EXPO_PUBLIC_USE_MOCK === 'true' || false; // Defaul
 
 class ApiService {
   private token: string | null = null;
+  private user: User | null = null;
 
-  async login(email: string, password: string): Promise<AuthResponse> {
+  async login(username: string, password: string): Promise<AuthResponse> {
     if (USE_MOCK) {
+
       // Mock login - accept any email/password
       await this.delay(1000);
       const response: AuthResponse = {
@@ -17,6 +19,7 @@ class ApiService {
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
       };
       this.token = response.token;
+      this.user = response.user;
       return response;
     }
 
@@ -25,7 +28,7 @@ class ApiService {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ username, password }),
     });
 
     if (!response.ok) {
@@ -174,15 +177,29 @@ class ApiService {
     this.token = token;
   }
 
+  setUser(user: User): void {
+    this.user = user;
+  }
+
+  getUser(): User | null {
+    return this.user;
+  }
+
   getToken(): string | null {
     return this.token;
   }
 
   private getAuthHeaders(): Record<string, string> {
-    return {
+    const headers: Record<string, string> = {
       'Authorization': `Bearer ${this.token}`,
       'Content-Type': 'application/json',
     };
+    
+    if (this.user) {
+      headers['X-User'] = this.user.username;
+    }
+    
+    return headers;
   }
 
   private async handleError(response: Response): Promise<ApiError> {
