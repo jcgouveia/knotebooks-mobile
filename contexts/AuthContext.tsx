@@ -46,8 +46,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const authResponse: AuthResponse = await apiService.login(username, password);
       
-      await AsyncStorage.setItem('auth_token', authResponse.token);
-      await AsyncStorage.setItem('user_data', JSON.stringify(authResponse.user));
+      if (authResponse.token) {
+        await AsyncStorage.setItem('auth_token', authResponse.token);
+        await AsyncStorage.setItem('user_data', JSON.stringify(authResponse.user));
+      }
       
       const user: User = {
         id: username,

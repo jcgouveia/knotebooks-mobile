@@ -1,7 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View, Image } from 'react-native';
 import { Github, GitBranch } from 'lucide-react-native';
 import { OAuthProvider } from '@/types/auth';
+import { logoGoogle } from '@/assets/images/icon.png';
 
 interface OAuthButtonProps {
   provider: OAuthProvider;
@@ -13,20 +14,20 @@ interface OAuthButtonProps {
 const providerIcons = {
   github: Github,
   gitlab: GitBranch,
-  google: () => null // We'll use a text icon for Google
+  google: () => <Image source={logoGoogle}/>
 };
 
 const providerStyles = {
   github: {
-    backgroundColor: '#24292e',
+    backgroundColor: '#000', //#24292e',
     color: '#ffffff'
   },
   gitlab: {
-    backgroundColor: '#FC6D26',
+    backgroundColor: '#000', //'#FC6D26',
     color: '#ffffff'
   },
   google: {
-    backgroundColor: '#4285f4',
+    backgroundColor: '#000', //'#4285f4',
     color: '#ffffff'
   }
 };
@@ -51,9 +52,11 @@ export default function OAuthButton({ provider, onPress, isLoading, disabled }: 
         ) : (
           <>
             {IconComponent && <IconComponent size={20} color={style.color} />}
-            {provider.id === 'google' && (
+            {
+            provider.id === 'google' && (
               <Text style={[styles.googleIcon, { color: style.color }]}>G</Text>
-            )}
+            )
+            }
             <Text style={[styles.buttonText, { color: style.color }]}>
               Continue with {provider.name}
             </Text>

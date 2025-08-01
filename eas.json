@@ -1,0 +1,35 @@
+{
+  "cli": {
+    "version": ">= 16.17.3",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"  // Generates a debug APK
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"  // Generates a debug APK
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk"  // Generates a debug APK
+      }
+    },
+    "release": {
+      "android": {
+        "buildType": "apk"  // Generates a release APK (signed)
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

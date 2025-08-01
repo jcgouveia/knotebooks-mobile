@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -17,12 +17,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Lock, BookOpen, NotebookIcon } from 'lucide-react-native';
 import OAuthButton from '@/components/OAuthButton';
 import { OAuthProvider } from '@/types/auth';
-import logoImage from '@/assets/images/k.notebooks-dark.svg';
+import logoImage from '@/assets/images/k.notebooks-dark.png';
 import logoCompany from '@/assets/images/logo-dark.png';
 import { usePlatformAlert } from '@/hooks/usePlatformAlert';
+import { checkAllStataus } from '@/utils/health';
+import { apiService } from '@/services/apiService';
 
 const oauthProviders: OAuthProvider[] = [
-  { id: 'github', name: 'GitHub', icon: 'github', color: '#24292e' },
+  //{ id: 'github', name: 'GitHub', icon: 'github', color: '#24292e' },
   { id: 'gitlab', name: 'GitLab', icon: 'gitlab', color: '#FC6D26' },
   { id: 'google', name: 'Google', icon: 'google', color: '#4285f4' }
 ];
@@ -35,6 +37,10 @@ export default function LoginScreen() {
   const { login, loginWithOAuth } = useAuth();
   const router = useRouter();
   const { alert } = usePlatformAlert();
+
+  useEffect(() => {
+    checkAllStataus();
+  }, []);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -71,13 +77,13 @@ export default function LoginScreen() {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <View style={styles.logoContainer}>
+          <View style={[styles.logoContainer, { marginTop: 30 }]}>
             <Image
               source={logoImage} 
               style={{ width: 270, height: 60 }}
             />
           </View>
-          <Text style={styles.subtitle}>Execute notebooks on the go</Text>
+          <Text style={styles.subtitle}>Agent notebooks on the go</Text>
           <View style={[styles.logoContainer, { marginTop: 20 }]}>
             <Text style={styles.subtitle2}>by</Text>
             <Image

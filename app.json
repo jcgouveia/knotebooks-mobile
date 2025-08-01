@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "k-notebooks-mobile",
+    "name": "K.Notebooks Go",
     "slug": "k-notebooks-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,6 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "morphis.knotebooks",
+      "permissions": ["INTERNET"]
     },
     "web": {
       "bundler": "metro",

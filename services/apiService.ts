@@ -8,21 +8,14 @@ class ApiService {
   private token: string | null = null;
   private user: User | null = null;
 
+  getBaseUrl() {
+    return API_BASE_URL;
+  }
+
   async login(username: string, password: string): Promise<AuthResponse> {
-    if (USE_MOCK) {
 
-      // Mock login - accept any email/password
-      await this.delay(1000);
-      const response: AuthResponse = {
-        token: 'mock-jwt-token-12345',
-        user: mockUser,
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-      };
-      this.token = response.token;
-      this.user = response.user;
-      return response;
-    }
-
+    console.log('Login request to:', API_BASE_URL);
+    
     const response = await fetch(`${API_BASE_URL}/session/login`, {
       method: 'POST',
       headers: {
@@ -31,21 +24,21 @@ class ApiService {
       body: JSON.stringify({ username, password }),
     });
 
+    console.log('Login Response status:', response.status);
+    console.log('Login Response headers:', response.headers);
+
     if (!response.ok) {
       throw await this.handleError(response);
     }
 
     const authResponse: AuthResponse = await response.json();
+    console.log('Login Success:', authResponse);
+
     this.token = authResponse.token;
     return authResponse;
   }
 
   async logout(): Promise<void> {
-    if (USE_MOCK) {
-      await this.delay(500);
-      this.token = null;
-      return;
-    }
 
     if (this.token) {
       await fetch(`${API_BASE_URL}/auth/logout`, {

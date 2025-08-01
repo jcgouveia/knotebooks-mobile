@@ -16,6 +16,10 @@ type ConfirmConfig = {
 };
 
 export const usePlatformAlert = () => {
+  const message = (text: string) => {
+    console.log("message >> ", text);
+  }
+
   // Simple alert (OK button)
   const alert = (title: string, message?: string) => {
     if (Platform.OS === 'web') {
@@ -26,12 +30,9 @@ export const usePlatformAlert = () => {
   };
 
   // Advanced confirm (custom buttons)
-  const confirm = (
-    title: string, 
-    message: string, 
-    buttons?: ButtonConfig[], 
-    options?: OptionsConfig
-  ) => {
+  const confirm = ( props: ConfirmConfig) => {
+
+    let { title, message, buttons, options} = props;
 
     if (!buttons) {
         buttons = [{ text: 'OK' }];
@@ -60,5 +61,5 @@ export const usePlatformAlert = () => {
     }
   };
 
-  return { alert, confirm };
+  return { alert, confirm, message };
 };

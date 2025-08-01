@@ -13,7 +13,7 @@ import { ArrowLeft, RefreshCw, Share as ShareIcon, Copy } from 'lucide-react-nat
 import * as Clipboard from 'expo-clipboard';
 import { Platform } from 'react-native';
 import { usePlatformAlert } from '@/hooks/usePlatformAlert';
-import { Base64 } from '@/types/utils';
+import { Base64 } from '@/utils/utils';
 import { apiService } from '@/services/apiService';
 
 type Params = {
