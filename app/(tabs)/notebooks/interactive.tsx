@@ -48,7 +48,9 @@ export default function InteractiveNotebookScreen() {
   };
 
   function buildExecutionUrl(notebookId: string, projectId?: string) {
-    const RUNNER_BASE_URL = process.env.EXPO_PUBLIC_RUNNER_URL; 
+    const RUNNER_BASE_URL = process.env.EXPO_PUBLIC_RUNNER_BASE_URL; 
+    const RUNNER_URL = RUNNER_BASE_URL + "/" + "runner/index.html";
+    
     let url = `${RUNNER_BASE_URL}?id=${encodeURIComponent(notebookId)}`;
     if (projectId)
       url = url + `&ownerId=${encodeURIComponent(projectId)}`;

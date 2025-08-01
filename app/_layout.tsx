@@ -4,10 +4,22 @@ import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { SettingsProvider } from '@/contexts/SettingsContext';
+import * as SplashScreen from 'expo-splash-screen';
+
+// Prevent the splash screen from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
 function RootLayoutContent() {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    // Hide splash screen once authentication is determined
+    if (!isLoading) {
+      SplashScreen.hideAsync();
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -29,7 +41,7 @@ function RootLayoutContent() {
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="+not-found" />
-      </Stack>a
+      </Stack>
       <StatusBar style="auto" />
     </>
   );
@@ -39,8 +51,10 @@ export default function RootLayout() {
   useFrameworkReady();
 
   return (
-    <AuthProvider>
-      <RootLayoutContent />
-    </AuthProvider>
+    <SettingsProvider>
+      <AuthProvider>
+        <RootLayoutContent />
+      </AuthProvider>
+    </SettingsProvider>
   );
 }

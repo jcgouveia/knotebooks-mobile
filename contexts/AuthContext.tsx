@@ -4,6 +4,7 @@ import { User, AuthResponse } from '@/types/api';
 import { OAuthUserInfo } from '@/types/auth';
 import { apiService } from '@/services/apiService';
 import { oauthService } from '@/services/oauthService';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface AuthContextType {
   user: User | null;
@@ -19,6 +20,12 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { serverUrl } = useSettings();
+
+  useEffect(() => {
+    // Update API service base URL when settings change
+    apiService.setBaseUrl(serverUrl);
+  }, [serverUrl]);
 
   useEffect(() => {
     loadStoredAuth();
@@ -51,15 +58,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await AsyncStorage.setItem('user_data', JSON.stringify(authResponse.user));
       }
       
-      const user: User = {
-        id: username,
-        username,
-        name: username
-      }
-      apiService.setUser(user);
-      setUser(user);
-    } 
-    catch (error) {
+      apiService.setUser(authResponse.user);
+      setUser(authResponse.user);
+    } catch (error) {
       throw error;
     }
   };
